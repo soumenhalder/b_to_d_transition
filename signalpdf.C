@@ -1,4 +1,4 @@
-void signalMC_1(TString mode="piee") {
+void signalpdf(TString mode="piee") {
     bool do_mcmatch =  false; //true means do truth matching and false means don't do
     double no_of_generated_event=200000;
     
@@ -143,57 +143,6 @@ void signalMC_1(TString mode="piee") {
         
      /*Continuum suppression variable*/
 
-    TH1F *h[21];
-     
-     h[1]=new TH1F("k0hso00","k0hso00",150,0,3);
-     h[2]=new TH1F("k0hso01","k0hso01",150,0-1.5,1.5);
-     h[3]=new TH1F("k0hso02","k0hso02",150,-1.5,1.5);
-     h[4]=new TH1F("k0hso03","k0hso03",150,-1,1);
-     h[5]=new TH1F("k0hso04","k0hso04",150,-1,1);
-     h[6]=new TH1F("k0hso10","k0hso10",150,0,2.5);
-     h[7]=new TH1F("k0hso12","k0hso12",150,-1,1);
-     h[8]=new TH1F("k0hso14","k0hso14",150,-0.6,0.6);
-     h[9]=new TH1F("k0hso20","k0hso20",150,0,2);
-     h[10]=new TH1F("k0hso22","k0hso22",150,-0.6,0.9);
-     h[11]=new TH1F("k0hso24","k0hso24",150,-0.6,0.9);
-     h[12]=new TH1F("k0hoo0","k0hoo0",150,0,0.6);
-     h[13]=new TH1F("k0hoo1","k0hoo1",150,-0.06,0.06);
-     h[14]=new TH1F("k0hoo2","k0hoo2",150,-0.1,0.2);
-     h[15]=new TH1F("k0hoo3","k0hoo3",150,-0.04,0.05);
-     h[16]=new TH1F("k0hoo4","k0hoo4",150,-0.1,0.1);
-     
-     h[17]=new TH1F("|Cos(#theta_{B})|","|Cos(#theta_{B})|",150,0,1.1);
-        h[17]->GetXaxis()->SetTitle("|Cos(#theta_{B})|");
-     h[18]=new TH1F("|Cos(#theta_{T})|","|Cos(#theta_{T})|",150,0,1.1);
-        h[18]->GetXaxis()->SetTitle("|Cos(#theta_{T})|");
-     h[19]=new TH1F("R2","R2",150,0,1.1);
-        h[19]->GetXaxis()->SetTitle("R2");
-     h[20]=new TH1F("R2","R2",150,0,1.1);
-        h[20]->GetXaxis()->SetTitle("");
-     for(int i=1;i<20;i++) h[i]->SetStats(0);
-     float k0hso00,k0hso01,k0hso02,k0hso03,k0hso04,k0hso10,k0hso12,k0hso14,
-           k0hso20,k0hso22,k0hso24,k0hoo0,k0hoo1,k0hoo2,k0hoo3,k0hoo4;  
-     double cosb,cost,r2;
-//     tree->SetBranchAddress("KSFWVariables_bohso00_bc",&k0hso00);
-//     tree->SetBranchAddress("KSFWVariables_bohso01_bc",&k0hso01);
-//     tree->SetBranchAddress("KSFWVariables_bohso02_bc",&k0hso02);
-//     tree->SetBranchAddress("KSFWVariables_bohso03_bc",&k0hso03);
-//     tree->SetBranchAddress("KSFWVariables_bohso04_bc",&k0hso04);
-//     tree->SetBranchAddress("KSFWVariables_bohso10_bc",&k0hso10);
-//     tree->SetBranchAddress("KSFWVariables_bohso12_bc",&k0hso12);
-//     tree->SetBranchAddress("KSFWVariables_bohso14_bc",&k0hso14);
-//     tree->SetBranchAddress("KSFWVariables_bohso20_bc",&k0hso20);
-//     tree->SetBranchAddress("KSFWVariables_bohso22_bc",&k0hso22);
-//     tree->SetBranchAddress("KSFWVariables_bohso24_bc",&k0hso24);
-//     tree->SetBranchAddress("KSFWVariables_bohoo0_bc",&k0hoo0);
-//     tree->SetBranchAddress("KSFWVariables_bohoo1_bc",&k0hoo1);
-//     tree->SetBranchAddress("KSFWVariables_bohoo2_bc",&k0hoo2);
-//     tree->SetBranchAddress("KSFWVariables_bohoo3_bc",&k0hoo3);
-//     tree->SetBranchAddress("KSFWVariables_bohoo4_bc",&k0hoo4);
-     tree->SetBranchAddress("cosTBz",&cosb);
-     tree->SetBranchAddress("cosTBTO",&cost);
-     tree->SetBranchAddress("R2",&r2);
-
 
 
     double no_of_reconstructed_B_wobrem = 0;
@@ -250,26 +199,7 @@ void signalMC_1(TString mode="piee") {
             delE->Fill(de);
             no_of_reconstructed_B_withbrem++;
             }
-//          h[1]->Fill(k0hso00);
-//          h[2]->Fill(k0hso01);
-//          h[3]->Fill(k0hso02);
-//          h[4]->Fill(k0hso03); 
-//          h[5]->Fill(k0hso04);
-//          h[6]->Fill(k0hso10);
-//          h[7]->Fill(k0hso12);
-//          h[8]->Fill(k0hso14);
-//          h[9]->Fill(k0hso20);
-//          h[10]->Fill(k0hso22);
-//          h[11]->Fill(k0hso24);
-//          h[12]->Fill(k0hoo0);
-//          h[13]->Fill(k0hoo1);
-//          h[14]->Fill(k0hoo2);
-//          h[15]->Fill(k0hoo3);
-//          h[16]->Fill(k0hoo4);
-          h[17]->Fill(cosb);
-          h[18]->Fill(cost);
-          h[19]->Fill(r2);
-         
+        
       }
         
          double scale= 1/(mbc->Integral());       
@@ -340,36 +270,5 @@ void signalMC_1(TString mode="piee") {
         mbc_canvas += mode;
         if(do_mcmatch) mbc_canvas += "_T_matched_";
         mbc_canvas += ".eps";
-       // Mbc->SaveAs(mbc_canvas);          
-//      
-//        
-//        TString cont_supp2 = "../plots/EWP/continuumSuppression2_";
-//        cont_supp2 += mode;
-//        if(do_mcmatch) cont_supp2 += "_T_matched_";
-//        cont_supp2 += ".eps";
-//        
-//        TCanvas *c1=new TCanvas("c5","c5",2000,2000);
-//        c1->Divide(4,4);
-//        for(int i=1; i<17;i++){
-//           c1->cd(i);
-//           h[i]->Draw();
-//         }
-//       // c1->SaveAs(cont_supp2);
-//        
-//        TString cont_supp1 = "../plots/EWP/continuumSuppression1_";
-//         cont_supp1 += mode;
-//        if(do_mcmatch) cont_supp1 += "_T_matched_";
-//        cont_supp1 += ".eps";
-//        
-        TCanvas *c2=new TCanvas("c2","c2",2000,2000);
-        c2->Divide(2,2);
-        c2->cd(1);
-        h[17]->Draw();
-        c2->cd(2);
-        h[18]->Draw();
-        c2->cd(3);
-        h[19]->Draw();
-       // c2->SaveAs(cont_supp1);
-    
-    
+   
 }

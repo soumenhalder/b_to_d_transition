@@ -1,12 +1,12 @@
-void signalMC_1(TString mode="piee") {
-    bool do_mcmatch =  false; //true means do truth matching and false means don't do
+void signalMC(TString mode="piee") {
+    bool do_mcmatch = false; //true means do truth matching and false means don't do
     double no_of_generated_event=200000;
     
-    TString fname="../input_rootfiles/rootfile_apr8/";
+    TString fname="../../../input_rootfiles/rootfile/";
     fname+= mode;
     fname += ".root";
     
-    TString fname1="../input_rootfiles/rootfile_apr8/";
+    TString fname1="../../../input_rootfiles/rootfile/";
     fname1+= mode;
     fname1 += "_wo_brem.root";
     
@@ -18,30 +18,10 @@ void signalMC_1(TString mode="piee") {
    /*for case of brem recovery and wo brem recovery*/ 
     TFile *f2 = new TFile(fname1);   
     TTree *tr = (TTree*) f2->Get(mode);
-
+    
     /*Histogram Definition and assigning with tree*/
     
-    Int_t ncandidates , candidate, event;
-    tree->SetBranchAddress("__candidate__",&candidate);
-    tree->SetBranchAddress("__ncandidates__",&ncandidates); 
-    tree->SetBranchAddress("__event__",&event);
-    TH1F *multiplicity = new TH1F("Multiplicity","",8,0,8);
-       multiplicity->GetXaxis()->SetTitle("# of B candidate");
-       multiplicity->SetLineColor(kRed);
-       multiplicity->SetLineWidth(0.5);
-       multiplicity->SetFillColor(kRed);
-       multiplicity->SetFillStyle(3005);
-
-        TGaxis *myX = (TGaxis*)multiplicity->GetXaxis();
-        myX->SetMaxDigits(4);
-
-        multiplicity->GetXaxis()->SetTitleOffset(1.0);
-        multiplicity->GetXaxis()->SetTitleSize(0.04);
-        multiplicity->GetYaxis()->SetTitleOffset(1.3);
-        multiplicity->GetYaxis()->SetTitleSize(0.04);
-        //mbc->SetStats(0);
-
-
+    
     /*DeltaE and Mbc*/
     TH1F *mbc=new TH1F("with brem recovery","",100,5.2,5.3);
         mbc->GetXaxis()->SetTitle("M_{bc} (GeV/c^{2})");
@@ -61,8 +41,8 @@ void signalMC_1(TString mode="piee") {
         mbc->GetYaxis()->SetTitleSize(0.04); 
         //mbc->SetStats(0);
        
-        Double_t mbC;
-        tree->SetBranchAddress("Mbc",&mbC);
+        float mbC;
+        tree->SetBranchAddress("B_mbc",&mbC);
         
       TH1F *mbc_wobrem=new TH1F("without brem recovery","",100,5.2,5.3);
         mbc_wobrem->GetXaxis()->SetTitle("M_{bc} (GeV/c^{2})");
@@ -82,8 +62,8 @@ void signalMC_1(TString mode="piee") {
  
         //mbc_wobrem->SetStats(0);
        
-        Double_t mbC_wobrem;
-        tr->SetBranchAddress("Mbc",&mbC_wobrem);
+        float mbC_wobrem;
+        tr->SetBranchAddress("B_mbc",&mbC_wobrem);
         
     TH1F *delE=new TH1F("with brem recovery  ","",300,-0.3,0.3);
         delE->GetXaxis()->SetTitle("#DeltaE (GeV)");
@@ -99,14 +79,14 @@ void signalMC_1(TString mode="piee") {
         delE->GetYaxis()->SetTitleOffset(1.3);
         delE->GetYaxis()->SetTitleSize(0.04); 
         //delE->SetStats(0);
-        Double_t de;
-        tree->SetBranchAddress("deltaE",&de);
+        float de;
+        tree->SetBranchAddress("B_deltae",&de);
            
 
-     TH1F *delE_wobrem=new TH1F("wo brem recovery","",300,-0.3,0.3);
+     TH1F *delE_wobrem=new TH1F("wo brem recovery  ","",300,-0.3,0.3);
         delE_wobrem->GetXaxis()->SetTitle("#DeltaE (GeV)");
-        //delE_wobrem->GetYaxis()->SetTitle("Entries/ 0.002 GeV");
-          
+       // delE_wobrem->GetYaxis()->SetTitle("Entries/ 0.002 GeV");
+        
         delE_wobrem->SetLineColor(kBlue);
         delE_wobrem->SetLineWidth(0.5);
         delE_wobrem->SetFillColor(kBlue);
@@ -117,33 +97,26 @@ void signalMC_1(TString mode="piee") {
         delE_wobrem->GetYaxis()->SetTitleOffset(1.3);
         delE_wobrem->GetYaxis()->SetTitleSize(0.04); 
         //delE_wobrem->SetStats(0);
-        Double_t de_wobrem;
-        tr->SetBranchAddress("deltaE",&de_wobrem);
+        float de_wobrem;
+        tr->SetBranchAddress("B_deltae",&de_wobrem);
 
-      /*Multiplicity*/        
-          
+        
      /*truth matching*/  
         /* wo bremrecovery*/
-        Double_t B_pi_mcPDG, B_e0_mcPDG, B_e1_mcPDG,B_mcPDG,B_pi_genMotherPDG, B_e0_genMotherPDG, B_e1_genMotherPDG;
+        int B_pi_mcPDG, B_e0_mcPDG, B_e1_mcPDG,B_mcPDG;
         tr->SetBranchAddress("B_e0_mcPDG",&B_e0_mcPDG);
         tr->SetBranchAddress("B_e1_mcPDG",&B_e1_mcPDG);
         tr->SetBranchAddress("B_pi_mcPDG",&B_pi_mcPDG);
         tr->SetBranchAddress("B_mcPDG",&B_mcPDG);
-        tr->SetBranchAddress("B_pi_genMotherPDG",&B_pi_genMotherPDG);
-        tr->SetBranchAddress("B_e0_genMotherPDG",&B_e0_genMotherPDG);        
-        tr->SetBranchAddress("B_e1_genMotherPDG",&B_e1_genMotherPDG);
- 
+        
         /* with bremrecovery*/
-        Double_t B1_pi_mcPDG, B1_e0_mcPDG, B1_e1_mcPDG,B1_mcPDG;
+        int B1_pi_mcPDG, B1_e0_mcPDG, B1_e1_mcPDG;
         tree->SetBranchAddress("B_e0_mcPDG",&B1_e0_mcPDG);
         tree->SetBranchAddress("B_e1_mcPDG",&B1_e1_mcPDG);
         tree->SetBranchAddress("B_pi_mcPDG",&B1_pi_mcPDG);
-        tree->SetBranchAddress("B_mcPDG",&B1_mcPDG);
- 
-        
      /*Continuum suppression variable*/
 
-    TH1F *h[21];
+    TH1F *h[20];
      
      h[1]=new TH1F("k0hso00","k0hso00",150,0,3);
      h[2]=new TH1F("k0hso01","k0hso01",150,0-1.5,1.5);
@@ -168,104 +141,80 @@ void signalMC_1(TString mode="piee") {
         h[18]->GetXaxis()->SetTitle("|Cos(#theta_{T})|");
      h[19]=new TH1F("R2","R2",150,0,1.1);
         h[19]->GetXaxis()->SetTitle("R2");
-     h[20]=new TH1F("R2","R2",150,0,1.1);
-        h[20]->GetXaxis()->SetTitle("");
+    
      for(int i=1;i<20;i++) h[i]->SetStats(0);
      float k0hso00,k0hso01,k0hso02,k0hso03,k0hso04,k0hso10,k0hso12,k0hso14,
            k0hso20,k0hso22,k0hso24,k0hoo0,k0hoo1,k0hoo2,k0hoo3,k0hoo4;  
-     double cosb,cost,r2;
-//     tree->SetBranchAddress("KSFWVariables_bohso00_bc",&k0hso00);
-//     tree->SetBranchAddress("KSFWVariables_bohso01_bc",&k0hso01);
-//     tree->SetBranchAddress("KSFWVariables_bohso02_bc",&k0hso02);
-//     tree->SetBranchAddress("KSFWVariables_bohso03_bc",&k0hso03);
-//     tree->SetBranchAddress("KSFWVariables_bohso04_bc",&k0hso04);
-//     tree->SetBranchAddress("KSFWVariables_bohso10_bc",&k0hso10);
-//     tree->SetBranchAddress("KSFWVariables_bohso12_bc",&k0hso12);
-//     tree->SetBranchAddress("KSFWVariables_bohso14_bc",&k0hso14);
-//     tree->SetBranchAddress("KSFWVariables_bohso20_bc",&k0hso20);
-//     tree->SetBranchAddress("KSFWVariables_bohso22_bc",&k0hso22);
-//     tree->SetBranchAddress("KSFWVariables_bohso24_bc",&k0hso24);
-//     tree->SetBranchAddress("KSFWVariables_bohoo0_bc",&k0hoo0);
-//     tree->SetBranchAddress("KSFWVariables_bohoo1_bc",&k0hoo1);
-//     tree->SetBranchAddress("KSFWVariables_bohoo2_bc",&k0hoo2);
-//     tree->SetBranchAddress("KSFWVariables_bohoo3_bc",&k0hoo3);
-//     tree->SetBranchAddress("KSFWVariables_bohoo4_bc",&k0hoo4);
-     tree->SetBranchAddress("cosTBz",&cosb);
-     tree->SetBranchAddress("cosTBTO",&cost);
-     tree->SetBranchAddress("R2",&r2);
+     float cosb,cost,r2;
+     tree->SetBranchAddress("B_hso00_KsfwFS1",&k0hso00);
+     tree->SetBranchAddress("B_hso01_KsfwFS1",&k0hso01);
+     tree->SetBranchAddress("B_hso02_KsfwFS1",&k0hso02);
+     tree->SetBranchAddress("B_hso03_KsfwFS1",&k0hso03);
+     tree->SetBranchAddress("B_hso04_KsfwFS1",&k0hso04);
+     tree->SetBranchAddress("B_hso10_KsfwFS1",&k0hso10);
+     tree->SetBranchAddress("B_hso12_KsfwFS1",&k0hso12);
+     tree->SetBranchAddress("B_hso14_KsfwFS1",&k0hso14);
+     tree->SetBranchAddress("B_hso20_KsfwFS1",&k0hso20);
+     tree->SetBranchAddress("B_hso22_KsfwFS1",&k0hso22);
+     tree->SetBranchAddress("B_hso24_KsfwFS1",&k0hso24);
+     tree->SetBranchAddress("B_hoo0_KsfwFS1",&k0hoo0);
+     tree->SetBranchAddress("B_hoo1_KsfwFS1",&k0hoo1);
+     tree->SetBranchAddress("B_hoo2_KsfwFS1",&k0hoo2);
+     tree->SetBranchAddress("B_hoo3_KsfwFS1",&k0hoo3);
+     tree->SetBranchAddress("B_hoo4_KsfwFS1",&k0hoo4);
+     tree->SetBranchAddress("B_CosTBz",&cosb);
+     tree->SetBranchAddress("B_CosTBTO",&cost);
+     tree->SetBranchAddress("B_R2",&r2);
 
 
 
-    double no_of_reconstructed_B_wobrem = 0;
+    double no_of_reconstructed_B_wobrem = tr->GetEntries();
     /*Histogram Filling*/
+    cout<<"efficiency before brem recovery = "<<(no_of_reconstructed_B_wobrem)/(no_of_generated_event);
     for(int i=0;i<tr->GetEntries();i++){
          tr->GetEntry(i);
-         /*Truth matching*/
-          bool istruth = false;
-          if(mode == "piee")
-               istruth = TMath::Abs(B_e0_mcPDG)==11 && TMath::Abs(B_pi_mcPDG)==211 
-                       && TMath::Abs(B_pi_mcPDG)==211 && TMath::Abs(B_e1_mcPDG)==11 
-                       && (B_e0_mcPDG+B_e1_mcPDG)==0 && TMath::Abs(B_mcPDG) == 521;
+         bool istruth = TMath::Abs(B_e0_mcPDG)==11 && TMath::Abs(B_pi_mcPDG)==211 
+               && TMath::Abs(B_pi_mcPDG)==211 && TMath::Abs(B_e1_mcPDG)==11 
+                       && (B_e0_mcPDG+B_e1_mcPDG)==0;
          bool pass = (istruth && do_mcmatch) || (!do_mcmatch) ;
          if(!pass )  continue;
-          
-          /*Filling*/
+            
           if( de_wobrem > -0.2 && de_wobrem <  0.1)
               mbc_wobrem->Fill(mbC_wobrem);
-          if(mbC_wobrem > 5.26){
+          if(mbC_wobrem > 5.26)
               delE_wobrem->Fill(de_wobrem);
-               no_of_reconstructed_B_wobrem ++;
-               }
           }
-    cout<<"efficiency before brem recovery = "<<(no_of_reconstructed_B_wobrem)/(no_of_generated_event)<<endl; 
-     double no_of_reconstructed_B_withbrem = 0; 
- 
-     
-    int event1 = 0;
-    for(int i=0;i<tree->GetEntries();i++){
+     double no_of_reconstructed_B_withbrem = tree->GetEntries(); 
+     cout<<"efficiency after brem recovery = "<<(no_of_reconstructed_B_withbrem)/(no_of_generated_event);
+    for(int i=0;i<nentries;i++){
          tree->GetEntry(i);
-        
-           
-         //cout<<"candidate:ncandidates" <<event<<"  "<< candidate<<" "<<ncandidates<<endl;
-         //cout<<B1_e0_mcPDG<<" "<<B1_e1_mcPDG<<"  "<<B1_pi_mcPDG<<" "<<B1_mcPDG<<endl;
-         int skip = (event - event1);
-         if(event != event1) multiplicity->Fill(ncandidates);
-         if(event != event1) multiplicity->Fill(0,skip);
-         event1 = event;
-         /*Truth matching*/
-         bool istruth = false;
-         if(mode == "piee")  
-               istruth = TMath::Abs(B1_e0_mcPDG)==11 && TMath::Abs(B1_pi_mcPDG)==211 
-                        && TMath::Abs(B1_pi_mcPDG)==211 && TMath::Abs(B1_e1_mcPDG)==11 
-                        && (B1_e0_mcPDG+B1_e1_mcPDG)==0  && TMath::Abs(B1_mcPDG) == 521;
-
+         bool istruth = TMath::Abs(B1_e0_mcPDG)==11 && TMath::Abs(B1_pi_mcPDG)==211 
+               && TMath::Abs(B1_pi_mcPDG)==211 && TMath::Abs(B1_e1_mcPDG)==11 
+                       && (B1_e0_mcPDG+B1_e1_mcPDG)==0  ;
          bool pass = (istruth && do_mcmatch) || (!do_mcmatch) ;
          if(!pass )  continue;
-      
-          
-         /*Filling*/ 
-         if( de > -0.2 && de <  0.1)
+         
+          if( de > -0.2 && de <  0.1)
             mbc->Fill(mbC);
-         if(mbC > 5.26){
+         if(mbC > 5.26)
             delE->Fill(de);
-            no_of_reconstructed_B_withbrem++;
-            }
-//          h[1]->Fill(k0hso00);
-//          h[2]->Fill(k0hso01);
-//          h[3]->Fill(k0hso02);
-//          h[4]->Fill(k0hso03); 
-//          h[5]->Fill(k0hso04);
-//          h[6]->Fill(k0hso10);
-//          h[7]->Fill(k0hso12);
-//          h[8]->Fill(k0hso14);
-//          h[9]->Fill(k0hso20);
-//          h[10]->Fill(k0hso22);
-//          h[11]->Fill(k0hso24);
-//          h[12]->Fill(k0hoo0);
-//          h[13]->Fill(k0hoo1);
-//          h[14]->Fill(k0hoo2);
-//          h[15]->Fill(k0hoo3);
-//          h[16]->Fill(k0hoo4);
+         
+          h[1]->Fill(k0hso00);
+          h[2]->Fill(k0hso01);
+          h[3]->Fill(k0hso02);
+          h[4]->Fill(k0hso03); 
+          h[5]->Fill(k0hso04);
+          h[6]->Fill(k0hso10);
+          h[7]->Fill(k0hso12);
+          h[8]->Fill(k0hso14);
+          h[9]->Fill(k0hso20);
+          h[10]->Fill(k0hso22);
+          h[11]->Fill(k0hso24);
+          h[12]->Fill(k0hoo0);
+          h[13]->Fill(k0hoo1);
+          h[14]->Fill(k0hoo2);
+          h[15]->Fill(k0hoo3);
+          h[16]->Fill(k0hoo4);
           h[17]->Fill(cosb);
           h[18]->Fill(cost);
           h[19]->Fill(r2);
@@ -281,12 +230,24 @@ void signalMC_1(TString mode="piee") {
          scale = 1/(delE_wobrem->Integral());
          delE_wobrem->Scale(scale);
          
-   
-       cout<<"efficiency after brem recovery = "<<(no_of_reconstructed_B_withbrem)/(no_of_generated_event)<<endl;
+        /*For normalising when compairing brem and wo brem recovery*/
+     //   Double_t scale1 = mbc->GetXaxis()->GetBinWidth(1)/(mbc->GetIntegral());
+     //   mbc->Scale(scale1);
+     //   Double_t scale2 = mbc_wobrem->GetXaxis()->GetBinWidth(1)/(mbc_wobrem->GetIntegral());
+     //   mbc_wobrem->Scale(scale2);
+     //    
+     //   Double_t scale3 = delE->GetXaxis()->GetBinWidth(1)/(delE->GetIntegral());
+     //   delE->Scale(scale3);
+     //   Double_t scale4 = delE_wobrem->GetXaxis()->GetBinWidth(1)/(delE_wobrem->GetIntegral());
+     //   delE_wobrem->Scale(scale4);
+    
+
+
+
 
        /*Saving plots*/
-       multiplicity->Draw(); 
-      TCanvas *De = new TCanvas("De","De",1000,1000);
+    
+       TCanvas *De = new TCanvas("De","De",1000,1000);
         De->cd();
         delE->Draw();
         De->Update();
@@ -312,7 +273,7 @@ void signalMC_1(TString mode="piee") {
         if(do_mcmatch) de_canvas += "_T_matched_";
         de_canvas += ".eps";
        // De->SaveAs(de_canvas); 
-   
+     
         TCanvas *Mbc = new TCanvas("Mbc","Mbc",1000,1000);
         Mbc->cd();
          mbc->Draw();
@@ -336,31 +297,31 @@ void signalMC_1(TString mode="piee") {
         Mbc->Draw();
         Mbc->BuildLegend();
         
-        TString mbc_canvas = "../plots/EWP/Mbc_";
+        TString mbc_canvas = "../../../plots/EWP/Mbc_";
         mbc_canvas += mode;
         if(do_mcmatch) mbc_canvas += "_T_matched_";
         mbc_canvas += ".eps";
        // Mbc->SaveAs(mbc_canvas);          
-//      
-//        
-//        TString cont_supp2 = "../plots/EWP/continuumSuppression2_";
-//        cont_supp2 += mode;
-//        if(do_mcmatch) cont_supp2 += "_T_matched_";
-//        cont_supp2 += ".eps";
-//        
-//        TCanvas *c1=new TCanvas("c5","c5",2000,2000);
-//        c1->Divide(4,4);
-//        for(int i=1; i<17;i++){
-//           c1->cd(i);
-//           h[i]->Draw();
-//         }
-//       // c1->SaveAs(cont_supp2);
-//        
-//        TString cont_supp1 = "../plots/EWP/continuumSuppression1_";
-//         cont_supp1 += mode;
-//        if(do_mcmatch) cont_supp1 += "_T_matched_";
-//        cont_supp1 += ".eps";
-//        
+      
+        
+        TString cont_supp2 = "../../../plots/EWP/continuumSuppression2_";
+        cont_supp2 += mode;
+        if(do_mcmatch) cont_supp2 += "_T_matched_";
+        cont_supp2 += ".eps";
+        
+        TCanvas *c1=new TCanvas("c5","c5",2000,2000);
+        c1->Divide(4,4);
+        for(int i=1; i<17;i++){
+           c1->cd(i);
+           h[i]->Draw();
+         }
+       // c1->SaveAs(cont_supp2);
+        
+        TString cont_supp1 = "../../../plots/EWP/continuumSuppression1_";
+         cont_supp1 += mode;
+        if(do_mcmatch) cont_supp1 += "_T_matched_";
+        cont_supp1 += ".eps";
+        
         TCanvas *c2=new TCanvas("c2","c2",2000,2000);
         c2->Divide(2,2);
         c2->cd(1);
